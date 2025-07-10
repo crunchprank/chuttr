@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Chuttr Filter Settings</title>
+  <style>
+    :root {
+      --primary: #1f8eed;
+      --bg: #f5f7fa;
+      --card: #ffffff;
+      --text: #333333;
+      --border: #dddddd;
+      --radius: 6px;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .container {
+      width: 300px;
+      padding: 16px;
+      box-sizing: border-box;
+    }
+    h2 {
+      margin: 0 0 16px;
+      font-size: 1.3rem;
+      text-align: center;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      cursor: pointer;
+      background: #fafafa;
+      border-bottom: 1px solid var(--border);
+    }
+    .card-header.disabled {
+      opacity: 0.6;
+    }
+    .card-body {
+      padding: 10px 14px;
+    }
+    .card-body.collapsed {
+      display: none;
+    }
+    .card-body label {
+      font-size: 0.9rem;
+      margin-top: 8px;
+      display: block;
+    }
+    .card-body input[type="number"],
+    .card-body input[type="text"] {
+      width: 100%;
+      padding: 6px 8px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 36px;
+      height: 20px;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #ccc;
+      transition: .2s;
+      border-radius: 20px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 2px;
+      bottom: 2px;
+      background: white;
+      transition: .2s;
+      border-radius: 50%;
+    }
+    .switch input:checked + .slider {
+      background: var(--primary);
+    }
+    .switch input:checked + .slider:before {
+      transform: translateX(16px);
+    }
+    .buttons {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    button {
+      flex: 1;
+      padding: 8px;
+      font-size: 0.9rem;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button#save {
+      background: var(--primary);
+      color: #fff;
+    }
+    button#save:hover {
+      background: #167ac6;
+    }
+    button#reset {
+      background: #e0e0e0;
+      color: var(--text);
+    }
+    button#reset:hover {
+      background: #c6c6c6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Chuttr Filter</h2>
+
+    <!-- Excessive Caps -->
+    <div class="card" data-rule="caps">
+      <div class="card-header">
+        <span>Excessive Caps</span>
+        <label class="switch">
+          <input type="checkbox" id="rule-caps">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="card-body">
+        <label for="caps-threshold">Caps Ratio (0–1):</label>
+        <input type="number" id="caps-threshold" step="0.01" min="0" max="1" value="0.6">
+        <label><input type="checkbox" id="caps-include-numbers"> Include Numbers</label>
+      </div>
+    </div>
+
+    <!-- Repeated Characters -->
+    <div class="card" data-rule="repeat">
+      <div class="card-header">
+        <span>Repeated Characters</span>
+        <label class="switch">
+          <input type="checkbox" id="rule-repeat">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="card-body">
+        <label for="repeat-threshold">Repetition Threshold:</label>
+        <input type="number" id="repeat-threshold" min="2" max="20" value="10">
+      </div>
+    </div>
+
+    <!-- Link Spam -->
+    <div class="card" data-rule="links">
+      <div class="card-header">
+        <span>Link Spam</span>
+        <label class="switch">
+          <input type="checkbox" id="rule-links">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="card-body">
+        <label for="link-pattern">Link Domains:</label>
+        <input type="text" id="link-pattern" value="xyz|win|tk">
+      </div>
+    </div>
+
+    <!-- Emote Count -->
+    <div class="card" data-rule="emote">
+      <div class="card-header">
+        <span>Emote Count</span>
+        <label class="switch">
+          <input type="checkbox" id="rule-emote">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="card-body">
+        <label for="emote-threshold">Max Emotes:</label>
+        <input type="number" id="emote-threshold" min="1" step="1" value="10">
+      </div>
+    </div>
+
+    <!-- Keyword Filter -->
+    <div class="card" data-rule="keyword">
+      <div class="card-header">
+        <span>Keyword Filter</span>
+        <label class="switch">
+          <input type="checkbox" id="rule-keyword">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="card-body">
+        <label for="keyword-pattern">Keywords (pipe-separated):</label>
+        <input type="text" id="keyword-pattern" value="follow4follow|sub4sub|buy follows">
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button id="save">Save</button>
+      <button id="reset">Reset</button>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
